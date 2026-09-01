@@ -3,8 +3,8 @@ import matplotlib.gridspec as gridspec
 import matplotlib.animation as animation
 import numpy as np
 
-from race.config.airplane_config import AirplaneConfig
-from race.models.airplane_race import Airplane
+from OOP.race.config.airplane_config import AirplaneConfig
+from OOP.race.models.airplane_race import Airplane
 
 
 class RaceSimulation:

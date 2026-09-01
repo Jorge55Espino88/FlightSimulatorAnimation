@@ -1,6 +1,6 @@
 import numpy as np
 
-from race.config.airplane_config import AirplaneConfig
+from OOP.race.config.airplane_config import AirplaneConfig
 
 
 class Airplane:
