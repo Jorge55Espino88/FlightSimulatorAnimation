@@ -1,32 +1,63 @@
-# Airplane Race - Air Race Simulation
+# FlightSimulatorAnimation
 
-Simulation of 3 airplanes with different laws of motion `X = a * t^n` for analysis of distance and speed vs time.
+Air race simulation + Mach number extension with ISA atmosphere.
 
-![Race Demo](race.gif)
-*Figure: Simulation capture - 3 planes at different altitudes*
+### Demo
+![Race](assets/race.gif)
 
-### Model Physics
+### Final Structure
+FlightSimulatorAnimation/
+├── race/ # Original base - Mark Misin License
+│ ├── config/
+│ │ └── airplane_config.py # AirplaneConfig (a, n, altitude)
+│ └── models/
+│ ├── airplane_race.py # Artist + physics X=a_t^n, V=n_a*t^(n-1)
+│ └── race_airplanes.py # Definition of the 3 race airplanes
+│
+├── Speed/ # My extension - Mach calculation
+│ ├── config/
+│ │ ├── constants.py # Airplane OFFSETS + ISA constants
+│ │ └── data.py # c(h) and Mach = V / c calculation
+│ ├── managers/
+│ │ ├── air_manager.py
+│ │ ├── building_manager.py
+│ │ ├── graph_manager.py
+│ │ ├── text_manager.py
+│ │ └── trail_manager.py
+│ ├── models/
+│ │ ├── airplane_speed.py # Pure renderer, receives (x,y) from data.py
+│ │ ├── text_elements.py
+│ │ └── trail.py
+│ ├── plots/
+│ │ └── animator.py
+│ └── speed.py # Speed entry point
+│
+├── assets/
+│ └── race.gif
+├── requirements.txt
+└── README.md
 
-Every plane follows a power law:
 
-- **Position:** `X(t) = a * t^n` [km]
-- **Speed:** `V(t) = dX/dt = n * a * t^(n-1)` [km/hr]
+### Why two airplane files?
 
-Configured aircraft:
-- **Plane 1 (Red):** `X = 800 * t^1` -> Uniform motion, constant V=800
-- **Plane 2 (Blue):** `X = 1131 * t^0.5` -> Decelerated, V decreases as t^-0.5
-- **Plane 3 (Green):** `X = 200 * t^3` -> Accelerated, V grows as t^2
+Not duplicated code, different responsibilities:
 
-> Original concept by Mark Misin Engineering. See LICENSE.
+- `race/models/airplane_race.py`: Coupled model. Contains physics `X=a*t^n` and rendering `SHAPE = [BODY, WING...]`. Optimized, vectorized version of the original race.
 
-###Features
+- `Speed/models/airplane_speed.py`: Decoupled model. **Renders only**. Uses `OFFSETS` from `constants.py` and a parts `dict`. Physics and Mach logic live in `Speed/config/data.py`. This pattern allows `graph_manager` and `trail_manager` to handle it.
 
-- Scalable OOP: adding a plane is 1 line in `configs`
-- Animation with 3 synchronized subplots
-- Optimized wake calculation with slicing
-- Graphs of X(t) and V(t) in real time
+### Physics
 
-### Installation
+- Race: `X(t)=a*t^n`, `V(t)=n*a*t^(n-1)`
+- Speed: `M(t)=V(t)/c(h)`, with `c(h)` from ISA atmosphere
+
+### Run
 
 ```bash
-pip install numpy matplotlib
+pip install -r requirements.txt
+python Speed/speed.py # Original file done in functions by me
+python race/race_airplanes.py # Original race done in POO by me
+```
+
+Roadmap3-airplane raceManager architectureMach vs time plot[x]
+Original concept © Mark Misin Engineering. Race  and Speed respects original license. 
